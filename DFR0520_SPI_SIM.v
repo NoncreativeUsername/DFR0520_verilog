@@ -8,8 +8,8 @@
 // Module Name: DFR0520_SPI_SIM
 // Project Name: 
 // Target Devices: 
-// Tool Versions: 
-// Description: 
+// Tool Versions: Vivado 2020.2
+// Description: testbed
 // 
 // Dependencies: 
 // 
@@ -36,20 +36,20 @@ DFR0520_SPI CUT (
     );
     
 always
-    #20 clk_in = ~clk_in;
+    #20 clk_in = ~clk_in;       //12.5Mhz is max SPI speed, clk flips twice per cycle
 
 initial begin
-    cmd = 2'b01;
-    sel = 2'b01;
+    cmd = 2'b01;                //write to chip
+    sel = 2'b01;                //write to pot 1
     clk_in = 0;
     EN = 0;
-    data = 8'b10101010;
+    data = 8'b10101010;         //random test data
     
     #100 EN = 1;
-    #40 EN = 0;
+    #40 EN = 0;                 //#40 one pulse at 12.5MHz
     
-    #200 data = 8'b11110001;
-    #600 EN = 1;
+    #200 data = 8'b11110001;    //different random test data
+    #600 EN = 1;                //give enough time to complete once before starting again
     #40 EN = 0;
 end
 
