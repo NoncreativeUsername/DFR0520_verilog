@@ -44,6 +44,9 @@ always @ (posedge clk_in) begin
         delay <= 2'b01;                            //load delay shift register
     end
    
+   if (select == 1'b0) begin
+        sdata <= {sdata[14:0], 1'b0};               //shift register into serial data output
+    end
 end
 
 always @ (posedge clk_in) begin
@@ -60,11 +63,6 @@ always @ (posedge clk_in) begin
     end
 end
 
-always @ (posedge clk_in) begin
-    if (select == 1'b0) begin
-        sdata <= {sdata[14:0], 1'b0};               //shift register into serial data output
-    end
-end
 
 assign CS = select;                 //assign chip select output to select
 assign MOSI = sdata[15];            //assign MOSI as sdata most significant bit
