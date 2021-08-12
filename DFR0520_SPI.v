@@ -32,7 +32,7 @@ module DFR0520_SPI(
     
 reg select = 1'b1;                  //select is active low, keep high until needed
 reg [3:0] CS_counter = 4'b0000;               //keeps select low for 16 clk cycles
-reg [16:0] sdata = 18'b0;                   //serial data to be sent to chip, use as shift register
+reg [15:0] sdata = 16'b0;                   //serial data to be sent to chip, use as shift register
 reg [1:0] delay;                            //shift register for timing issues
 
 
@@ -40,7 +40,7 @@ always @ (posedge clk_in) begin
     delay <= {delay[0], 1'b0};                      //delayshift register
     
     if (EN == 1'b1 && select == 1'b1) begin
-        sdata <= {3'b0, cmd, 2'b0, sel, data};      //load command, select, and data bits into the serial data register
+        sdata <= {2'b0, cmd, 2'b0, sel, data};      //load command, select, and data bits into the serial data register
         delay <= 2'b01;                            //load delay shift register
     end
    
@@ -62,12 +62,12 @@ end
 
 always @ (posedge clk_in) begin
     if (select == 1'b0) begin
-        sdata <= {sdata[15:0], 1'b0};               //shift register into serial data output
+        sdata <= {sdata[14:0], 1'b0};               //shift register into serial data output
     end
 end
 
 assign CS = select;                 //assign chip select output to select
-assign MOSI = sdata[16];            //assign MOSI as sdata most significant bit
+assign MOSI = sdata[15];            //assign MOSI as sdata most significant bit
 assign SCK = clk_in;                //just pass this through for now, SPI typicaly uses half the system clk but not more than 12.5 MHz
 
 endmodule
