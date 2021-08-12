@@ -37,11 +37,11 @@ reg [1:0] delay;                            //shift register for timing issues
 
 
 always @ (posedge clk_in) begin
-    delay <= {delay[0], 1'b0};                      //delayshift register
+    delay <= {delay[0], 1'b0};                                      //delayshift register
     
-    if (EN == 1'b1 && select == 1'b1) begin
-        sdata <= {2'b0, cmd, 2'b0, sel, data};      //load command, select, and data bits into the serial data register
-        delay <= 2'b01;                            //load delay shift register
+    if (EN == 1'b1 && select == 1'b1 && delay == 2'b0) begin        //only allows the process to start if it is currently incative
+        sdata <= {2'b0, cmd, 2'b0, sel, data};                      //load command, select, and data bits into the serial data register
+        delay <= 2'b01;                                             //load delay shift register
     end
    
    if (select == 1'b0) begin
